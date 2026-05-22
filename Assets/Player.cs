@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -7,10 +8,13 @@ public class Player : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
 
     [Header("MoveMent details")]
-    [SerializeField] private float xInput;
     [SerializeField] private float moveSpeed = 3.5f;
     [SerializeField] private float jumpForce = 8f;
-                             private bool facingRight = true;
+    private float xInput;
+    private bool facingRight = true;
+    private bool canMove = true;
+    private bool canJump = false;
+
 
     [Header("Collision details")]
     [SerializeField] private float groundCheckDistance;
@@ -36,8 +40,9 @@ public class Player : MonoBehaviour
 
     private void HandleAnimation()
     {
-       bool  isMoving= rb.linearVelocity.x != 0;
-        anim.SetBool("isMoving", isMoving);
+       anim.SetFloat("xVelocity", rb.linearVelocity.x);
+        anim.SetFloat("yVelotity", rb.linearVelocity.y);
+        anim.SetBool("isGrounded", isGrounded);
       
     }
 
@@ -46,22 +51,37 @@ public class Player : MonoBehaviour
         xInput = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetKeyDown(KeyCode.Space))
-            Jump();
+            TryToJump();
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+            TryToAttack();
+
+    }
+
+    //攻击方法
+    private void TryToAttack()
+    {
+        if (isGrounded)
+        {
+            anim.SetTrigger("attack");
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        }
+    }
+
+
+    // 跳跃方法
+    private void TryToJump()
+    {
+        if(isGrounded && canJump)
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
     }
 
     //移动
     private void HandleMovement()
     {
+        if(canMove)
         rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
     }
-
-    // 跳跃方法
-    private void Jump()
-    {
-        if(isGrounded)
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-    }
-
     //检测是否在地面
     private void HandleCollision()
     {
@@ -71,9 +91,9 @@ public class Player : MonoBehaviour
     //人物反转
     private void HandleFlip()
     {
-        if (rb.linearVelocity.x > 0 && facingRight == true)
+        if (rb.linearVelocity.x > 0 && facingRight == false)
             Flip();
-        else if (rb.linearVelocity.x < 0 && facingRight == false)
+        else if (rb.linearVelocity.x < 0 && facingRight == true)
             Flip();
     }
 
