@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 271748375}
   - component: {fileID: 271748374}
   - component: {fileID: 271748373}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -640,7 +640,7 @@ Transform:
   m_GameObject: {fileID: 1370581706}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.00000026226834, z: 0, w: -1}
-  m_LocalPosition: {x: 4.58, y: 0.49, z: 0}
+  m_LocalPosition: {x: 3.87, y: -1.877, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -660,9 +660,9 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 0.5
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3.5
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -726,9 +726,12 @@ MonoBehaviour:
   anim: {fileID: 0}
   rb: {fileID: 0}
   xInput: 0
-  moveSpeed: 3.5
+  moveSpeed: 8
   jumpForce: 8
-  facingRight: 0
+  groundCheckDistance: 1.38
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
