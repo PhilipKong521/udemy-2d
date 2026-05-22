@@ -1,11 +1,19 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Animator anim;
-    [SerializeField] private Rigidbody2D rb;
+    private Animator anim;
+    private Rigidbody2D rb;
+
+    public Collider2D[] enemyColliders; //创建数组时，使用设置大小 //faster// 可以添加或移动项目
+    //public List<Collider2D> exampleList;  //创建列表，可以增加或缩小列表大小 // slower //可以添加或移动项目
+    [Header("Attack details")]
+    [SerializeField] private float attackRadius;
+    [SerializeField] private Transform attackPoint;
+    [SerializeField] private LayerMask whatIsEnemy;
 
     [Header("MoveMent details")]
     [SerializeField] private float moveSpeed = 3.5f;
@@ -35,7 +43,17 @@ public class Player : MonoBehaviour
         HandleMovement();
         HandleAnimation();
         HandleFlip();
+    }
 
+    public void DamageEnemies()
+    {
+        enemyColliders = Physics2D.OverlapCircleAll(attackPoint.position, attackRadius, whatIsEnemy);
+    }
+
+    public void EnableMovementAndJump(bool enable)
+    {
+        canMove = enable;
+        canJump = enable;
     }
 
     private void HandleAnimation()
@@ -62,10 +80,7 @@ public class Player : MonoBehaviour
     private void TryToAttack()
     {
         if (isGrounded)
-        {
             anim.SetTrigger("attack");
-            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
-        }
     }
 
 
@@ -79,8 +94,10 @@ public class Player : MonoBehaviour
     //移动
     private void HandleMovement()
     {
-        if(canMove)
-        rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
+        if (canMove)
+            rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
+        else
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
     }
     //检测是否在地面
     private void HandleCollision()

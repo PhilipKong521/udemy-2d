@@ -2,13 +2,15 @@ using UnityEngine;
 
 public class PlayerAnimationEvents : MonoBehaviour
 {
-   private void AttackStarted()
+    private Player player;
+
+    private void Awake()
     {
-        Debug.Log("Attack Started");
+        player = GetComponentInParent<Player>();
     }
 
-    private void AttackFinished()
-    {
-        Debug.Log("Attack Finished");
-    }
+    public void DamageEnemies() => player.DamageEnemies();
+   private void DisableMovementAndJump() => player.EnableMovementAndJump(false);
+
+    private void EnableMovementAndJump() => player.EnableMovementAndJump(true);
 }
