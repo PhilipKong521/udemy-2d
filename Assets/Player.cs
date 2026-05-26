@@ -47,7 +47,16 @@ public class Player : MonoBehaviour
 
     public void DamageEnemies()
     {
-        enemyColliders = Physics2D.OverlapCircleAll(attackPoint.position, attackRadius, whatIsEnemy);
+        Collider2D[] enemyColliders = Physics2D.OverlapCircleAll(attackPoint.position, attackRadius, whatIsEnemy);
+
+        foreach (Collider2D enemy in enemyColliders)
+        {
+            Enemy enemyScript = enemy.GetComponent<Enemy>();
+            enemyScript.TakeDamage();
+
+            string enemyName = enemyScript.GetEnemyName();
+            Debug.Log("I damaged enemy : " + enemyName);
+        }
     }
 
     public void EnableMovementAndJump(bool enable)
@@ -124,5 +133,6 @@ public class Player : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, -groundCheckDistance));
+        Gizmos.DrawWireSphere(attackPoint.position,attackRadius);
     }
 }
